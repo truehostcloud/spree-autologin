@@ -1,4 +1,6 @@
-Spree::Core::Engine.add_routes do
-  # Add your extension routes here
-  get 'spree/admin/auto_login/:user' => 'users#index'
+Spree::Core::Engine.routes.draw do
+  namespace :backend do
+    get 'admin/auto_login/:user' => 'users#index'
+  end
 end
+
