@@ -10,4 +10,10 @@ gem 'spree', github: 'spree/spree', branch: 'main'
 gem 'rails-controller-testing'
 gem 'device'
 
+
+group :test do
+  gem 'rspec'
+end 
+
 gemspec
+
