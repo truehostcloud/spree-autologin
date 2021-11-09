@@ -7,7 +7,7 @@ Introduction goes here.
 1. Add this extension to your Gemfile with this line:
 
     ```ruby
-    gem 'spree_olitt_login_extension' path: 'https://github.com/truehostcloud/spree-autologin.git' branch: 'dev'
+    gem 'spree_olitt_login_extension' github: 'https://github.com/truehostcloud/spree-autologin.git' branch: 'dev'
     ```
 
 2. Install the gem using Bundler
