@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loggig In</title>
+</head>
+<body>
+
+<div class="page-loader">
+ <img id="loader" src="images/loader.gif">
+</div>
+
+<div class="errors">
+    <% if flash[:login_errors] %>
+        <% flash[:login_errors].each do |error| %>
+            <p><%= error %></p>
+        <%end%>
+    <%end%>
+</div>
+    
+</body>
+</html>
