@@ -8,7 +8,6 @@
 .vscode
 coverage
 default
-Gemfile.lock
 tmp
 nbproject
 pkg
