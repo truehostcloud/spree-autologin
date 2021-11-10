@@ -8,7 +8,7 @@ class Spree::CustomUserAuthController < Spree::Api::BaseController
     user = Spree::User.find_by(email: email)
 
     if user.nil?
-      render json: {error: Spree.t(:authorization_failure)}
+      not_found
       return
     end
 
