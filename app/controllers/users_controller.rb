@@ -1,4 +1,4 @@
-class UsersController < SpreeExtension::Migration
+module UsersController:: SpreeExtension::Migration
     def index
     end
     def create
@@ -18,3 +18,5 @@ class UsersController < SpreeExtension::Migration
           params.require(:user).permit(:email, :password)
       end
 end
+
+Spree::Admin::UsersController.prepend SpreeOlittLoginExtension::Spree::Admin::UsersController
