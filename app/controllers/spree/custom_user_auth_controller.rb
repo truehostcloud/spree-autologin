@@ -1,5 +1,5 @@
 class Spree::CustomUserAuthController < ActionController::API
-  def create
+  def auto_login
     payload = params[:custom_user_auth]
 
     email = payload[:email]
