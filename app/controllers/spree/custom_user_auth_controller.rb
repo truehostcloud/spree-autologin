@@ -1,4 +1,4 @@
-class Spree::CustomUserAuthController < ActionController::API
+class Spree::CustomUserAuthController < Spree::Api::BaseController
   def auto_login
     payload = params[:custom_user_auth]
 
