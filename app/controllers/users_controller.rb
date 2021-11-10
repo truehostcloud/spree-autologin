@@ -8,7 +8,7 @@ module UsersController:: SpreeExtension::Migration
         end
         if user && user.authenticate(login_params[:password])
             sign_in(user)
-            redirect_to after_sign_in_path_for(user)
+            redirect_to 'admin/orders'
         else 
             flash[:login_errors] = ['Invalid credentials']
         end
