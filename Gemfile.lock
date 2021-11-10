@@ -1,7 +1,7 @@
 GIT
   remote: https://github.com/spree/spree.git
-  revision: 354945d2095cdd0ab47374f25d011a0fb1337a09
-  ref: 354945d2095cdd0ab47374f25d011a0fb1337a09
+  revision: 88082ee307d04e2327c1e3975ecfe19471e6c126
+  ref: 88082ee307d04e2327c1e3975ecfe19471e6c126
   branch: main
   specs:
     spree (4.4.0.alpha)
@@ -47,6 +47,18 @@ GIT
       state_machines-activerecord (~> 0.6)
       stringex
       validates_zipcode
+
+GIT
+  remote: https://github.com/spree/spree_auth_devise.git
+  revision: db4ccf202f42cdb713931e9915b213ab9c9b2062
+  ref: db4ccf202f42cdb713931e9915b213ab9c9b2062
+  branch: main
+  specs:
+    spree_auth_devise (4.4.0)
+      devise (~> 4.7)
+      devise-encryptable (= 0.2.0)
+      spree_core (>= 4.3.0.rc1)
+      spree_extension
 
 PATH
   remote: .
@@ -158,6 +170,7 @@ GEM
     awesome_nested_set (3.4.0)
       activerecord (>= 4.0.0, < 7.0)
     awesome_print (1.9.2)
+    bcrypt (3.1.16)
     builder (3.2.4)
     cancancan (3.3.0)
     capybara (3.36.0)
@@ -187,7 +200,14 @@ GEM
       activerecord (>= 5.a)
       database_cleaner-core (~> 2.0.0)
     database_cleaner-core (2.0.1)
-    device (0.0.0)
+    devise (4.8.0)
+      bcrypt (~> 3.0)
+      orm_adapter (~> 0.1)
+      railties (>= 4.1.0)
+      responders
+      warden (~> 1.2.3)
+    devise-encryptable (0.2.0)
+      devise (>= 2.1.0)
     diff-lcs (1.4.4)
     docile (1.4.0)
     doorkeeper (5.5.4)
@@ -282,6 +302,7 @@ GEM
     octokit (4.21.0)
       faraday (>= 0.9)
       sawyer (~> 0.8.0, >= 0.5.3)
+    orm_adapter (0.5.0)
     parallel (1.21.0)
     paranoia (2.4.3)
       activerecord (>= 4.0, < 6.2)
@@ -473,6 +494,8 @@ GEM
     unicode-display_width (2.1.0)
     validates_zipcode (0.5.0)
       activemodel (>= 4.2.0)
+    warden (1.2.9)
+      rack (>= 2.0.9)
     webdrivers (4.7.0)
       nokogiri (~> 1.6)
       rubyzip (>= 1.3.0)
@@ -488,9 +511,9 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
-  device
   rails-controller-testing
   spree!
+  spree_auth_devise!
   spree_dev_tools
   spree_olitt_login_extension!
 
