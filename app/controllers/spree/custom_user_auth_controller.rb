@@ -1,4 +1,6 @@
-class Spree::CustomUserAuthController < Spree::Api::BaseController
+class Spree::CustomUserAuthController < Spree::Api::V2::BaseController
+  before_action -> { doorkeeper_authorize! :read, :admin }
+
   def auto_login
     payload = params[:custom_user_auth]
 
@@ -7,10 +9,7 @@ class Spree::CustomUserAuthController < Spree::Api::BaseController
 
     user = Spree::User.find_by(email: email)
 
-    if user.nil?
-      not_found
-      return
-    end
+    raise ActiveRecord::RecordNotFound if user.nil?
 
     sign_in(user, event: :authentication)
 
