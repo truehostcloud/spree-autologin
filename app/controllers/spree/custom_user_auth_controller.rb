@@ -5,7 +5,8 @@ class Spree::CustomUserAuthController < Spree::Api::V2::BaseController
     payload = params[:custom_user_auth]
 
     email = payload[:email]
-    password = payload[:password]
+
+    raise ActionController::ParameterMissing.new(:email) if email.nil?
 
     user = Spree::User.find_by(email: email)
 
