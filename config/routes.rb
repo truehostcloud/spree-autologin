@@ -1,5 +1,5 @@
 Spree::Core::Engine.routes.draw do
-  namespace :admin do
-    get '/auto_login' => 'users#create' 
+  devise_scope :spree_user do
+    post 'admin/auto_login', controller: 'olitt/users', action: 'auto_login'
   end
 end
