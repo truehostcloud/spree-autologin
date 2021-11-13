@@ -8,11 +8,11 @@ end
 gem 'spree', github: 'spree/spree', branch: 'main'
 # gem 'spree_backend', github: 'spree/spree', branch: 'main'
 gem 'device'
-gem 'rake', '10.0.2'
 
 
 group :test do
-  gem 'rspec'
+  gem 'rake', require: false
+  gem 'rspec', require: false
 end
 
 group :development do

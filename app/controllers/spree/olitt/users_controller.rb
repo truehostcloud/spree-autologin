@@ -16,7 +16,7 @@ module Spree
 
         if user.valid_password?(password)
           sign_in(user, event: :authentication)
-          redirect_to spree.admin_path
+          render json: {success: true, redirect_to: spree.admin_path}
         else
           raise CanCan::AccessDenied
         end
