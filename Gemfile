@@ -7,7 +7,6 @@ end
 
 gem 'spree', github: 'spree/spree', branch: 'main'
 # gem 'spree_backend', github: 'spree/spree', branch: 'main'
-gem 'deface'
 gem 'device'
 gem 'rails-controller-testing'
 
