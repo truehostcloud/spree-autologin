@@ -1,10 +1,10 @@
-module SpreeOlittLoginExtension
+module SpreeAutologin
   module Generators
     class InstallGenerator < Rails::Generators::Base
       class_option :migrate, type: :boolean, default: true
 
       def add_migrations
-        run 'bundle exec rake railties:install:migrations FROM=spree_olitt_login_extension'
+        run 'bundle exec rake railties:install:migrations FROM=spree_autologin'
       end
 
       def run_migrations
@@ -12,7 +12,7 @@ module SpreeOlittLoginExtension
         if run_migrations
           run 'bundle exec rails db:migrate'
         else
-          puts 'Skipping rails db:migrate, don\'t forget to run it!'
+          Rails.logger.info 'Skipping rails db:migrate, don\'t forget to run it!'
         end
       end
     end

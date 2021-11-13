@@ -1,16 +1,16 @@
-module SpreeOlittLoginExtension
+module SpreeAutologin
   class Engine < Rails::Engine
     require 'spree/core'
     isolate_namespace Spree
-    engine_name 'spree_olitt_login_extension'
+    engine_name 'spree_autologin'
 
     # use rspec for tests
     config.generators do |g|
       g.test_framework :rspec
     end
 
-    initializer 'spree_olitt_login_extension.environment', before: :load_config_initializers do |_app|
-      SpreeOlittLoginExtension::Config = SpreeOlittLoginExtension::Configuration.new
+    initializer 'spree_autologin.environment', before: :load_config_initializers do |_app|
+      SpreeAutologin::Config = SpreeAutologin::Configuration.new
     end
 
     def self.activate

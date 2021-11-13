@@ -2,19 +2,19 @@
 lib = File.expand_path('../lib/', __FILE__)
 $LOAD_PATH.unshift lib unless $LOAD_PATH.include?(lib)
 
-require 'spree_olitt_login_extension/version'
+require 'spree_autologin/version'
 
 Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
-  s.name        = 'spree_olitt_login_extension'
-  s.version     = SpreeOlittLoginExtension.version
+  s.name        = 'spree_autologin'
+  s.version     = SpreeAutologin.version
   s.summary     = 'Add extension summary here'
   s.description = 'Add (optional) extension description here'
   s.required_ruby_version = '>= 2.5'
 
-  s.author    = 'You'
-  s.email     = 'you@example.com'
-  s.homepage  = 'https://github.com/your-github-handle/spree_olitt_login_extension'
+  s.author    = 'stevehoober254'
+  s.email     = 'stephen@olitt.com'
+  s.homepage  = 'https://github.com/your-github-handle/spree_autologin'
   s.license = 'BSD-3-Clause'
 
   s.files       = `git ls-files`.split("\n").reject { |f| f.match(/^spec/) && !f.match(/^spec\/fixtures/) }
