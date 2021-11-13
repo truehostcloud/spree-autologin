@@ -7,9 +7,9 @@ end
 
 gem 'spree', github: 'spree/spree', branch: 'main'
 # gem 'spree_backend', github: 'spree/spree', branch: 'main'
-gem 'rails-controller-testing'
+gem 'deface'
 gem 'device'
-
+gem 'rails-controller-testing'
 
 group :test do
   gem 'rspec'
@@ -25,4 +25,3 @@ group :development do
 end
 
 gemspec
-
