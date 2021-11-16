@@ -14,7 +14,7 @@ module Spree
 
         sign_in(user, event: :authentication)
 
-        render json: { success: true, redirect_to: spree.admin_path }
+        redirect_to spree.admin_path
       end
 
       private
