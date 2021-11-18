@@ -12,7 +12,7 @@ module Spree
 
         # raise CanCan::AccessDenied unless user.valid_password?(password)
 
-        create_vendor_user(vendor.id, 4)
+        # create_vendor_user(vendor.id, 4)
         # sign_in(user, event: :authentication)
         # redirect_to spree.admin_path
       end
@@ -32,7 +32,7 @@ module Spree
       end
 
       def create_vendor(name, email)
-        ::Spree::Vendor.create(name: name, notification_email: email)
+        ::Spree::VendorsController.create(name: name, notification_email: email)
       end
 
       # this is a boolean method 🤪
