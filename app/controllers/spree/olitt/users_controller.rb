@@ -46,7 +46,7 @@ module Spree
       end
 
       def create_user(email, password, vendor_id)
-        Spree::User.create(email: email, password: password, spree_role_ids: [2], spree_vendor_id: vendor_id)
+        Spree::User.create(email: email, password: password, spree_role_ids: [2], vendor_id: vendor_id)
       end
     end
   end
