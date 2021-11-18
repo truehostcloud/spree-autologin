@@ -7,7 +7,7 @@ module Spree
         vendor = ::Spree::Vendor.active.find_by(slug: name)
 
         vendor = create_vendor(name, email) if vendor_email_exist?(vendor)
-
+        Rails.logger.error(vendor)
         # user = create_user(email, password, vendor.id) if user_email_exists?(user)
 
         # raise CanCan::AccessDenied unless user.valid_password?(password)
