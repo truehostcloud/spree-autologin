@@ -4,7 +4,7 @@ module Spree
       def auto_login
         email, password, name = login_details
         user = Spree::User.find_by(email: email)
-        vendor = ::Spree::Vendor.find_by(email: email)
+        vendor = ::Spree::Vendor.active.find_by(slug: name)
 
         vendor = create_vendor(name, email, password) if vendor_email_exist(vendor)
 
