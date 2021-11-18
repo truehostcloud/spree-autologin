@@ -1,7 +1,7 @@
 module Spree
   module Olitt
     class UsersController < Spree::Api::V2::BaseController
-      def auto_login
+      def auto_login # rubocop:disable Metrics/AbcSize
         email, password, name = login_details
         user = Spree::User.find_by(email: email)
         vendor = ::Spree::Vendor.active.find_by(slug: name)
@@ -12,8 +12,8 @@ module Spree
 
         raise CanCan::AccessDenied unless user.valid_password?(password)
 
+        create_vendor_user(vendor_id, user.id)
         sign_in(user, event: :authentication)
-
         redirect_to spree.admin_path
       end
 
@@ -31,7 +31,7 @@ module Spree
         [email, password, name]
       end
 
-      def create_vendor(name, email, password)
+      def create_vendor(name, email, _password)
         ::Spree::Vendor.create(name: name, notification_email: email)
       end
 
@@ -45,8 +45,12 @@ module Spree
         user.nil?
       end
 
-      def create_user(email, password, vendor_id)
-        Spree::User.create(email: email, password: password, spree_role_ids: [2], vendor_id: vendor_id)
+      def create_user(email, password, _vendor_id)
+        Spree::User.create(email: email, password: password, spree_role_ids: [2])
+      end
+
+      def create_vendor_user(vendor_id, user_id)
+        ::Spree::VendorUser.create(vendor_id: vendor_id, user_id: user_id)
       end
     end
   end
