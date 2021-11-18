@@ -3,18 +3,17 @@ module Spree
     class UsersController < Spree::Api::V2::BaseController
       def auto_login # rubocop:disable Metrics/AbcSize
         email, name = login_details
-        # user = Spree::User.find_by(email: email)
+        user = Spree::User.find_by(email: email)
         vendor = ::Spree::Vendor.active.find_by(slug: name)
 
         vendor = create_vendor(name, email) if vendor_email_exist?(vendor)
-        Rails.logger.error(vendor)
-        # user = create_user(email, password, vendor.id) if user_email_exists?(user)
+        user = create_user(email, password, vendor.id) if user_email_exists?(user)
 
-        # raise CanCan::AccessDenied unless user.valid_password?(password)
+        raise CanCan::AccessDenied unless user.valid_password?(password)
 
-        # create_vendor_user(vendor.id, 4)
-        # sign_in(user, event: :authentication)
-        # redirect_to spree.admin_path
+        create_vendor_user(vendor.id, user.id)
+        sign_in(user, event: :authentication)
+        redirect_to spree.admin_path
       end
 
       private
