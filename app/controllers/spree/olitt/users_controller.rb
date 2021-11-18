@@ -3,10 +3,12 @@ module Spree
     class UsersController < Spree::Api::V2::BaseController
       def auto_login
         email, password, name = login_details
+        user = Spree::User.find_by(email: email)
+        vendor = Spree::Api::V1::VendorsController.find_by(email: email)
 
-        new_vendor = create_vendor(name, email, password) if vendor_email_exist(emial)
+        vendor = create_vendor(name, email, password) if vendor_email_exist(vendor)
 
-        user = create_user(email, password, new_vendor.id) if user_email_exists
+        user = create_user(email, password, vendor.id) if user_email_exists(user)
 
         raise CanCan::AccessDenied unless user.valid_password?(password)
 
@@ -34,14 +36,12 @@ module Spree
       end
 
       # this is a boolean method 🤪
-      def vendor_email_exist?(email)
-        vendor = Spree::Api::V1::VendorsController.find_by(email: email)
+      def vendor_email_exist?(vendor)
         vendor.nil?
       end
 
       # this is also a boolean method 🤪
-      def user_email_exists?(email)
-        user = Spree::User.find_by(email: email)
+      def user_email_exists?(user)
         user.nil?
       end
 
