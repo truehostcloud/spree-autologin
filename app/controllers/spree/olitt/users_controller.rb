@@ -32,7 +32,7 @@ module Spree
       end
 
       def create_vendor(name, email, password)
-        ::Spree::Vendor.create(name: name, email: email, password: password)
+        ::Spree::Vendor.create(name: name, notification_email: email, password: password)
       end
 
       # this is a boolean method 🤪
