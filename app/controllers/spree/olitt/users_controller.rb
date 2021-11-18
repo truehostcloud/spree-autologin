@@ -32,7 +32,7 @@ module Spree
       end
 
       def create_vendor(name, email)
-        ::Spree::VendorsController.create(name: name, notification_email: email)
+        ::Spree::Admin::VendorsController.create(name: name, notification_email: email)
       end
 
       # this is a boolean method 🤪
