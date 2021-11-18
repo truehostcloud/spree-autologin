@@ -7,11 +7,11 @@ module Spree
         vendor = ::Spree::Vendor.active.find_by(slug: name)
 
         vendor = create_vendor(name, email) if vendor_email_exist?(vendor)
-        activate_vendor(vendor.id)
         user = create_user(email, password, vendor.id) if user_email_exists?(user)
         raise CanCan::AccessDenied unless user.valid_password?(password)
 
         sign_in(user, event: :authentication)
+        activate_vendor(vendor.id)
         redirect_to spree.admin_path
       end
 
@@ -34,7 +34,7 @@ module Spree
       end
 
       def activate_vendor(vendor_id)
-        Spree::Admin::VendorsController.update(vendor_id: vendor_id, state: 'active')
+        Spree::Admin::VendorSettingsController.update(vendor_id: vendor_id, state: 'active')
       end
 
       # this is a boolean method 🤪
