@@ -6,9 +6,9 @@ module Spree
         user = Spree::User.find_by(email: email)
         vendor = ::Spree::Vendor.active.find_by(slug: name)
 
-        vendor = create_vendor(name, email, password) if vendor_email_exist(vendor)
+        vendor = create_vendor(name, email, password) if vendor_email_exist?(vendor)
 
-        user = create_user(email, password, vendor.id) if user_email_exists(user)
+        user = create_user(email, password, vendor.id) if user_email_exists?(user)
 
         raise CanCan::AccessDenied unless user.valid_password?(password)
 
