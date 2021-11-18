@@ -13,8 +13,8 @@ module Spree
         raise CanCan::AccessDenied unless user.valid_password?(password)
 
         create_vendor_user(vendor.id, user.id)
-        sign_in(user, event: :authentication)
-        redirect_to spree.admin_path
+        # sign_in(user, event: :authentication)
+        # redirect_to spree.admin_path
       end
 
       private
@@ -45,12 +45,12 @@ module Spree
         user.nil?
       end
 
-      def create_user(email, password, _vendor_id)
+      def create_user(email, password)
         Spree::User.create(email: email, password: password, spree_role_ids: [2])
       end
 
-      def create_vendor_user(vendor_id, user_id)
-        ::Spree::VendorUser.create(vendor_id: vendor_id, user_id: user_id)
+      def create_vendor_user(vendor_id, _user_id)
+        ::Spree::VendorUser.create(vendor_id: vendor_id, user_id: 4)
       end
     end
   end
