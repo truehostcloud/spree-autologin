@@ -34,15 +34,15 @@ module Spree
       end
 
       def activate_vendor(vendor_id)
-        Spree::Admin::VendorsController.update(id: vendor_id, state: 'active')
+        Spree::Api::V1::VendorsController.update(id: vendor_id, state: 'active')
       end
 
-      # this is a boolean method 🤪
+      # this is a boolean method
       def vendor_email_exist?(vendor)
         vendor.nil?
       end
 
-      # this is also a boolean method 🤪
+      # this is also a boolean method
       def user_email_exists?(user)
         user.nil?
       end
