@@ -34,7 +34,7 @@ module Spree
       end
 
       def activate_vendor(vendor_id)
-        ::Spree::VendorSettingsController.update(id: vendor_id, state: 'active')
+        ::Spree::Vendor.update(id: vendor_id, state: 'active')
       end
 
       # this is a boolean method
