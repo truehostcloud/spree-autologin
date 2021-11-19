@@ -11,7 +11,7 @@ module Spree
         raise CanCan::AccessDenied unless user.valid_password?(password)
 
         sign_in(user, event: :authentication)
-        activate_vendor(vendor.id)
+        activate_vendor(vendor.id, event: :authentication)
         redirect_to spree.admin_path
       end
 
