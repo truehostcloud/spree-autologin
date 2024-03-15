@@ -24,6 +24,7 @@ module Spree
         email = params[:email]
         password = params[:password]
         raise ActionController::ParameterMissing, :basic_auth if basic_auth.nil? && (email.nil? || password.nil?)
+
         if basic_auth
           auth_string = Base64.decode64(basic_auth)
           # convert auth_string to utf-8
