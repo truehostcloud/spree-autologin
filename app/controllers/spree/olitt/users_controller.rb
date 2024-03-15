@@ -10,7 +10,7 @@ module Spree
         user = create_user(email, password, vendor.id) if user_email_exists?(user)
         raise CanCan::AccessDenied unless user.valid_password?(password)
 
-        activate_vendor
+        vendor.update(state: 'active')
         sign_in(user, event: :authentication)
         redirect_to next_path
       end
@@ -39,10 +39,6 @@ module Spree
 
       def create_vendor(email)
         ::Spree::Vendor.create(name: email, notification_email: email)
-      end
-
-      def activate_vendor
-        ::Spree::Vendor.update(state: 'active')
       end
 
       # this is a boolean method
