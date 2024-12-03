@@ -1,3 +1,5 @@
+require_relative 'configuration'
+
 module SpreeAutologin
   class Engine < Rails::Engine
     require 'spree/core'
