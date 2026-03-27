@@ -4,6 +4,12 @@ require 'uri'
 module Spree
   module Olitt
     class UsersController < Spree::BaseController
+      def redirect_unauthorized_access
+        redirect_to unauthorized_redirect_path,
+                    allow_other_host: false,
+                    alert: I18n.t('spree.authorization_failure', default: 'You are not authorized to perform this action.')
+      end
+
       def auto_login
         email, password, next_path = login_details
 
@@ -59,7 +65,13 @@ module Spree
       end
 
       def find_or_create_user(email, password)
-        Spree.user_class.find_by(email: email) || Spree.user_class.create!(email: email, password: password)
+        user = Spree.user_class.find_or_initialize_by(email: email)
+        return user if user.persisted? && user.valid_password?(password)
+
+        user.password = password
+        user.password_confirmation = password if user.respond_to?(:password_confirmation=)
+        user.save!
+        user
       end
 
       def assign_vendor_role(user, vendor)
@@ -88,6 +100,18 @@ module Spree
         uri.path if uri.host.nil? && uri.scheme.nil? && uri.path.present?
       rescue URI::InvalidURIError
         nil
+      end
+
+      def unauthorized_redirect_path
+        if spree.respond_to?(:new_spree_user_session_path)
+          spree.new_spree_user_session_path
+        elsif spree.respond_to?(:login_path)
+          spree.login_path
+        elsif spree.respond_to?(:root_path)
+          spree.root_path
+        else
+          '/'
+        end
       end
     end
   end
