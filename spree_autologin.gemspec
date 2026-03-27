@@ -8,9 +8,9 @@ Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
   s.name        = 'spree_autologin'
   s.version     = SpreeAutologin.version
-  s.summary     = 'Add extension summary here'
-  s.description = 'Add (optional) extension description here'
-  s.required_ruby_version = '>= 2.5'
+  s.summary     = 'Admin auto-login flow for vendor onboarding'
+  s.description = 'Creates or signs in vendor users and redirects them into the Spree admin area.'
+  s.required_ruby_version = '>= 3.1'
 
   s.author    = 'stevehoober254'
   s.email     = 'stephen@olitt.com'
@@ -21,8 +21,8 @@ Gem::Specification.new do |s|
   s.require_path = 'lib'
   s.requirements << 'none'
 
-  s.add_dependency 'spree', '>= 4.3.0'
-  # s.add_dependency 'spree_backend' # uncomment to include Admin Panel changes
+  s.add_dependency 'spree', '~> 5.0'
+  s.add_dependency 'spree_admin', '~> 5.0'
   s.add_dependency 'spree_extension'
 
   s.add_development_dependency 'spree_dev_tools'
