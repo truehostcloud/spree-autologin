@@ -4,30 +4,41 @@ require 'uri'
 module Spree
   module Olitt
     class UsersController < Spree::BaseController
-      def redirect_unauthorized_access
-        redirect_to unauthorized_redirect_path,
-                    allow_other_host: false,
-                    alert: I18n.t('spree.authorization_failure', default: 'You are not authorized to perform this action.')
-      end
-
+      # Auto-login endpoint for vendors. Creates `Spree::AdminUser` on-demand
+      # (migrates the legacy user) and assigns vendor-scoped role.
       def auto_login
         email, password, next_path = login_details
 
-        user = nil
+        admin_user = nil
         vendor = nil
 
-        Spree.user_class.transaction do
+        ActiveRecord::Base.transaction do
           vendor = find_or_create_vendor(email)
-          user = find_or_create_user(email, password)
 
-          raise CanCan::AccessDenied unless user.valid_password?(password)
+          # Ensure admin user exists and handle legacy password hashes.
+          legacy_user = Spree.user_class.find_by('LOWER(email) = ?', email.downcase)
+          result = Spree::AdminUserMigrationService.ensure_admin_for_user(source_user: legacy_user, email: email, dry_run: false)
+          admin_user = result.admin_user
 
-          assign_vendor_role(user, vendor)
+          begin
+            valid_pw = admin_user.valid_password?(password)
+          rescue ::BCrypt::Errors::InvalidHash
+            valid_pw = false
+          end
+
+          unless valid_pw || result.autologin_created || result.reset_token.present?
+            raise CanCan::AccessDenied
+          end
+
+          # Assign vendor role using app helper if available, otherwise create RoleUser
+          assign_vendor_role(admin_user, vendor)
           activate_vendor(vendor)
         end
 
-        sign_in(user, event: :authentication)
+        sign_in(admin_user, event: :authentication)
         redirect_to next_path, allow_other_host: false
+      rescue CanCan::AccessDenied
+        redirect_unauthorized_access
       end
 
       private
@@ -64,25 +75,15 @@ module Spree
           )
       end
 
-      def find_or_create_user(email, password)
-        user = Spree.user_class.find_or_initialize_by(email: email)
-        return user if user.persisted? && user.valid_password?(password)
-
-        user.password = password
-        user.password_confirmation = password if user.respond_to?(:password_confirmation=)
-        user.save!
-        user
-      end
-
-      def assign_vendor_role(user, vendor)
+      def assign_vendor_role(admin_user, vendor)
         vendor_role_name = defined?(Spree::Vendor::DEFAULT_VENDOR_ROLE) ? Spree::Vendor::DEFAULT_VENDOR_ROLE : 'vendor'
         vendor_role = Spree::Role.find_or_create_by!(name: vendor_role_name)
 
-        Spree::RoleUser.find_or_create_by!(
-          user: user,
-          role: vendor_role,
-          resource: vendor
-        )
+        if vendor.respond_to?(:add_user)
+          vendor.add_user(admin_user, vendor.default_user_role || vendor_role)
+        else
+          Spree::RoleUser.find_or_create_by!(user: admin_user, role: vendor_role, resource: vendor)
+        end
       end
 
       def activate_vendor(vendor)
@@ -100,6 +101,12 @@ module Spree
         uri.path if uri.host.nil? && uri.scheme.nil? && uri.path.present?
       rescue URI::InvalidURIError
         nil
+      end
+
+      def redirect_unauthorized_access
+        redirect_to unauthorized_redirect_path,
+                    allow_other_host: false,
+                    alert: I18n.t('spree.authorization_failure', default: 'You are not authorized to perform this action.')
       end
 
       def unauthorized_redirect_path
