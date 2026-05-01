@@ -114,9 +114,7 @@ module Spree
       end
 
       def vendor_user_link_class
-        @vendor_user_link_class ||= Class.new(ActiveRecord::Base) do
-          self.table_name = 'spree_vendor_users'
-        end
+        Spree::VendorUser
       end
 
       def activate_vendor(vendor)
