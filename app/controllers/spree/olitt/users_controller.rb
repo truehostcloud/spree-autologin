@@ -15,7 +15,13 @@ module Spree
 
         ActiveRecord::Base.transaction do
           legacy_user = Spree.user_class.find_by('LOWER(email) = ?', email.downcase)
-          admin_user = find_or_create_admin_user(email: email, password: password, legacy_user: legacy_user)
+          vendor_user = existing_vendor_user_link(vendor: vendor, legacy_user: legacy_user)
+
+          if vendor_user.present? && vendor_user.admin_user_id.present?
+            admin_user = Spree.admin_user_class.find_by(id: vendor_user.admin_user_id)
+          end
+
+          admin_user ||= find_or_create_admin_user(email: email, password: password, legacy_user: legacy_user)
 
           unless admin_user.persisted? && password_matches?(admin_user, password)
             raise CanCan::AccessDenied
@@ -89,28 +95,35 @@ module Spree
         vendor_role_name = defined?(Spree::Vendor::DEFAULT_VENDOR_ROLE) ? Spree::Vendor::DEFAULT_VENDOR_ROLE : 'vendor'
         vendor_role = Spree::Role.find_or_create_by!(name: vendor_role_name)
 
-        if vendor.respond_to?(:add_user)
-          vendor.add_user(admin_user, vendor.default_user_role || vendor_role)
-        else
-          Spree::RoleUser.find_or_create_by!(user: admin_user, role: vendor_role, resource: vendor)
-        end
+        Spree::RoleUser.find_or_create_by!(user: admin_user, role: vendor_role, resource: vendor)
       end
 
       def link_admin_user_to_vendor!(vendor:, admin_user:, legacy_user: nil)
         return unless ActiveRecord::Base.connection.data_source_exists?('spree_vendor_users')
 
-        vendor_user = if legacy_user.present?
-          vendor_user_link_class.find_by(vendor_id: vendor.id, user_id: legacy_user.id)
-        end
+        vendor_user = existing_vendor_user_link(vendor: vendor, legacy_user: legacy_user)
 
         if vendor_user.nil? && vendor_user_link_class.column_names.include?('admin_user_id')
           vendor_user = vendor_user_link_class.find_by(vendor_id: vendor.id, admin_user_id: admin_user.id)
         end
 
         vendor_user ||= vendor_user_link_class.new(vendor_id: vendor.id)
-        vendor_user.user_id = legacy_user.id if legacy_user.present? && vendor_user.respond_to?(:user_id=) && vendor_user.user_id.blank?
         vendor_user.admin_user_id = admin_user.id if vendor_user.respond_to?(:admin_user_id=)
+
         vendor_user.save! if vendor_user.new_record? || vendor_user.changed?
+      end
+
+      def existing_vendor_user_link(vendor:, legacy_user: nil)
+        return unless defined?(Spree::VendorUser)
+        return unless ActiveRecord::Base.connection.data_source_exists?('spree_vendor_users')
+
+        if legacy_user.present?
+          vendor_user = vendor_user_link_class.find_by(vendor_id: vendor.id, user_id: legacy_user.id)
+          return vendor_user if vendor_user.present?
+        end
+
+        vendor_user_link_class.where(vendor_id: vendor.id).where.not(admin_user_id: nil).first ||
+          vendor_user_link_class.find_by(vendor_id: vendor.id, admin_user_id: nil)
       end
 
       def vendor_user_link_class
